@@ -352,15 +352,16 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         children: [
                           const Icon(Icons.edit),
                           IconButton(
-                              onPressed: () {
-                                return setState(() {
-                                  _controller.deleteProduct(i);
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ))
+                            onPressed: () {
+                              return setState(() {
+                                _controller.deleteProduct(i);
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -373,8 +374,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addEmployee,
-        child: const Icon(Icons.add),
         backgroundColor: Colors.blue.shade400,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }

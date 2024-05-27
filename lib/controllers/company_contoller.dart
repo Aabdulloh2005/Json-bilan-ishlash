@@ -59,4 +59,7 @@ class CompanyContoller {
   void deleteProduct(int index) {
     _list[0].products.removeAt(index);
   }
+
+
+  
 }
