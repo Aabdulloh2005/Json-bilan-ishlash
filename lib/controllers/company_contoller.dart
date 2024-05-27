@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:homework_44/models/company.dart';
+import 'package:homework_44/models/employee.dart';
 
 class CompanyContoller {
   final List<Company> _list = [];
@@ -39,5 +40,23 @@ class CompanyContoller {
     _list.add(Company.fromJson(data));
     // print(_list[0].products);
   }
-}
 
+  void deleteEmployee(int index) {
+    _list[0].employees.removeAt(index);
+  }
+
+  void addEmployee(Employee employee) {
+    _list[0].employees.add(employee);
+  }
+
+  void editEmployee(int index, String name, int age, String position) {
+    var employee = _list[0].employees[index];
+    employee.name = name;
+    employee.age = age;
+    employee.position = position;
+  }
+
+  void deleteProduct(int index) {
+    _list[0].products.removeAt(index);
+  }
+}
