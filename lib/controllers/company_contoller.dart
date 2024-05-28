@@ -49,11 +49,12 @@ class CompanyContoller {
     _list[0].employees.add(employee);
   }
 
-  void editEmployee(int index, String name, int age, String position) {
+  void editEmployee(int index, String name, int age, String position, List<String> skills) {
     var employee = _list[0].employees[index];
     employee.name = name;
     employee.age = age;
     employee.position = position;
+    employee.skills = skills;
   }
 
   void deleteProduct(int index) {

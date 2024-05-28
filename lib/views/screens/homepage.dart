@@ -156,7 +156,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Add Employee',
+                  'Edit employee',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -189,7 +189,13 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                 .map((skill) => skill.trim())
                                 .toList(),
                           );
-                          _controller.addEmployee(newEmployee);
+                          _controller.editEmployee(
+                            index,
+                            nameController.text,
+                            int.parse(ageController.text),
+                            positionController.text,
+                            skillsController.text.split(" "),
+                          );
                         });
                         Navigator.of(context).pop();
                       },
