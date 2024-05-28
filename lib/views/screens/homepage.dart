@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:homework_44/controllers/company_contoller.dart';
 import 'package:homework_44/models/employee.dart';
 import 'package:homework_44/views/widgets/company_widgets.dart';
+import 'package:homework_44/views/widgets/skills_widget.dart';
+import 'package:http/http.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
@@ -17,6 +19,113 @@ class _HomepageScreenState extends State<HomepageScreen> {
   void initState() {
     super.initState();
     _controller.getProducts();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final data = _controller.list[0];
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.blue.shade400,
+        title: const Text(
+          "Information",
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    CompanyWidgets(name: data.company, title: "Company:"),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CompanyWidgets(name: data.location, title: "Location:"),
+                  ],
+                ),
+              ),
+            ),
+            const Text(
+              "Emlpoyees",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: data.employees.length,
+                itemBuilder: (context, i) {
+                  return SkillsWidget(
+                    onDdeleted: _deleteEmployee,
+                    onEdited: _editEmployee,
+                    data: data,
+                    i: i,
+                  );
+                },
+              ),
+            ),
+            const Text(
+              "Products",
+              style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: data.products.length,
+                itemBuilder: (context, i) {
+                  return Card(
+                    child: ListTile(
+                      title: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(child: Text("${data.products[i].name}")),
+                          Expanded(child: Text("${data.products[i].price}\$"))
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.edit),
+                          IconButton(
+                            onPressed: () {
+                              return setState(() {
+                                _controller.deleteProduct(i);
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addEmployee,
+        backgroundColor: Colors.blue.shade400,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
+    );
   }
 
   void _editEmployee(int index) {
@@ -183,201 +292,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
         decoration: InputDecoration(
           labelText: labelText,
           border: const OutlineInputBorder(),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final data = _controller.list[0];
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.blue.shade400,
-        title: const Text(
-          "Information",
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    CompanyWidgets(name: data.company, title: "Company:"),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CompanyWidgets(name: data.location, title: "Location:"),
-                  ],
-                ),
-              ),
-            ),
-            const Text(
-              "Emlpoyees",
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: data.employees.length,
-                itemBuilder: (context, i) {
-                  return Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Name: ${data.employees[i].name}",
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w500),
-                              ),
-                              Text(
-                                "Age: ${data.employees[i].age}",
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w500),
-                              ),
-                              Text(
-                                "Position: ${data.employees[i].position}",
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Text(
-                            "Skills",
-                            style: TextStyle(
-                                color: Colors.purple,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                height: 1),
-                          ),
-                          const Divider(
-                            color: Colors.purple,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              for (var i in data.employees[i].skills)
-                                Text(
-                                  i,
-                                  style: TextStyle(
-                                      color: Colors.purple.shade400,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {
-                                    return _editEmployee(i);
-                                  },
-                                  child: const Card(
-                                    color: Colors.grey,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: Text(
-                                        "Edit",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {
-                                    return _deleteEmployee(i);
-                                  },
-                                  child: const Card(
-                                    color: Colors.red,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Delete",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: data.products.length,
-                itemBuilder: (context, i) {
-                  return Card(
-                    child: ListTile(
-                      title: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(child: Text("${data.products[i].name}")),
-                          Expanded(child: Text("${data.products[i].price}\$"))
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.edit),
-                          IconButton(
-                            onPressed: () {
-                              return setState(() {
-                                _controller.deleteProduct(i);
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addEmployee,
-        backgroundColor: Colors.blue.shade400,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
         ),
       ),
     );
